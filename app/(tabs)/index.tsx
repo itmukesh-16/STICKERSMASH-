@@ -1,5 +1,7 @@
-import Button from "@/components/button"; // this include button component
-import ImageViewer from "@/components/imageViewer"; // it includes imageViewer
+import Button from "@/components/Button"; // this include button component
+import CircleButton from "@/components/CircleButton";
+import IconButton from "@/components/IconButton";
+import ImageViewer from "@/components/ImageViewer"; // it includes imageViewer
 import * as ImagePicker from "expo-image-picker"; // this will let us to pick the image from system
 import { useState } from "react"; // it stores the component state and update it
 import { StyleSheet, View } from "react-native"; // summoning stylesheet and view components
@@ -14,6 +16,8 @@ export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
+  // to configure the toggle feature for edit options
+  const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
 
   // Here the PicImageAsync method will invoke the launchImageLibraryAsync() which will collect image prorties in an array format
   const pickImageAsync = async () => {
@@ -27,12 +31,27 @@ export default function Index() {
     if (!result.canceled) {
       //console.log(result);
       setSelectedImage(result.assets[0].uri); // it will select image source from assets array
+      setShowAppOptions(true); // it will show the option after image being clicked
     } else {
-      alert("you did not selected any image");
+      // alert("you did not selected any image");
     }
   };
 
+  // This will reset the selected image
+  const onReset = () => {
+    setShowAppOptions(false);
+  };
+
+  const onAddSticker = () => {
+    // we will  implement onAddSticker feature to app
+  };
+
+  const onSaveImageAsync = async () => {
+    // we will implement save image feature
+  };
+
   return (
+    // this will show the bydefault image
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         {/* img component */}
@@ -41,16 +60,35 @@ export default function Index() {
           selectedImage={selectedImage}
         />
       </View>
-
-      {/* this section is button section  */}
-      <View style={styles.footerContainer}>
-        <Button
-          label="Choose a photo"
-          theme="primary"
-          onPress={pickImageAsync}
-        />
-        <Button label="Use this photo" />
-      </View>
+      {/* if the showAppOptins is true , it will show an image selected for edit
+      otherwise it will ask for choose a image */}
+      {showAppOptions ? (
+        <View style={styles.optionsContainer}>
+          <View style={styles.optionsRow}>
+            <IconButton icon="refresh" label="Reset" onPress={onReset} />
+            {/* reset button */}
+            <CircleButton onPress={onAddSticker} /> //edit button
+            {/* save button */}
+            <IconButton
+              icon="save-alt"
+              label="Save"
+              onPress={onSaveImageAsync}
+            />{" "}
+          </View>
+        </View>
+      ) : (
+        <View style={styles.footerContainer}>
+          <Button
+            theme="primary"
+            label="Choose a photo"
+            onPress={pickImageAsync}
+          />
+          <Button
+            label="Use this photo"
+            onPress={() => setShowAppOptions(true)}
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -67,5 +105,14 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1 / 3,
     alignItems: "center",
+  },
+  // styles for reset and save button
+  optionsContainer: {
+    position: "absolute",
+    bottom: 80,
+  },
+  optionsRow: {
+    alignItems: "center",
+    flexDirection: "row",
   },
 });

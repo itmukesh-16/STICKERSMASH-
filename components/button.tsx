@@ -8,15 +8,21 @@ type Props = {
 
 export default function Button({ label, theme, onPress }: Props) {
   if (theme == "primary") {
+    // if the condition passed it will be applied to button having theme == primary
     return (
       <View
         style={[
           styles.buttonContainer,
-          { borderWidth: 4, borderColor: "#ffd33d", borderRadius: 18 },
+          {
+            borderWidth: 4,
+            borderColor: "#ffd33d",
+            borderRadius: 18,
+            backgroundColor: "#fff", // it will change the background color of primary button
+          },
         ]}
       >
         <Pressable
-          style={[styles.button, { backgroundColor: "#fff" }]}
+          style={styles.button}
           onPress={onPress} // it will trigger the onPress funtoin on Index.tsx and call the associated function .ie onPress={pickImageAsync}
         >
           <FontAwesome
@@ -32,6 +38,18 @@ export default function Button({ label, theme, onPress }: Props) {
       </View>
     );
   }
+
+  // otherwise this coode will be applied
+  return (
+    <View style={[styles.buttonContainer]}>
+      <Pressable
+        style={styles.button}
+        onPress={onPress} // it will trigger the onPress funtoin on Index.tsx and call the associated function .ie onPress={pickImageAsync}
+      >
+        <Text style={[styles.buttonLabel, { color: "#dee5ec" }]}>{label}</Text>
+      </Pressable>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
